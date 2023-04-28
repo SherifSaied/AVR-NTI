@@ -1,0 +1,274 @@
+
+Lab3.8_3swWith2Leds.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001be  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .stab         000004f8  00000000  00000000  00000214  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  2 .stabstr      00000939  00000000  00000000  0000070c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
+  64:	0c 94 dd 00 	jmp	0x1ba	; 0x1ba <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <main>:
+#define PORTD    	*((u8*)0x32)
+#define DDRD    	*((u8*)0x31)
+#define PIND    	*((volatile u8*)0x30)
+
+int main(void)
+{
+  6c:	df 93       	push	r29
+  6e:	cf 93       	push	r28
+  70:	00 d0       	rcall	.+0      	; 0x72 <main+0x6>
+  72:	0f 92       	push	r0
+  74:	cd b7       	in	r28, 0x3d	; 61
+  76:	de b7       	in	r29, 0x3e	; 62
+	//set direction pin0 , pin1 as output for led
+	DDRA |= (1<<0) ;
+  78:	aa e3       	ldi	r26, 0x3A	; 58
+  7a:	b0 e0       	ldi	r27, 0x00	; 0
+  7c:	ea e3       	ldi	r30, 0x3A	; 58
+  7e:	f0 e0       	ldi	r31, 0x00	; 0
+  80:	80 81       	ld	r24, Z
+  82:	81 60       	ori	r24, 0x01	; 1
+  84:	8c 93       	st	X, r24
+	DDRA |= (1<<1) ;
+  86:	aa e3       	ldi	r26, 0x3A	; 58
+  88:	b0 e0       	ldi	r27, 0x00	; 0
+  8a:	ea e3       	ldi	r30, 0x3A	; 58
+  8c:	f0 e0       	ldi	r31, 0x00	; 0
+  8e:	80 81       	ld	r24, Z
+  90:	82 60       	ori	r24, 0x02	; 2
+  92:	8c 93       	st	X, r24
+	//set value off in normal mode for leds
+	PORTA &= ~(1<<0) ;
+  94:	ab e3       	ldi	r26, 0x3B	; 59
+  96:	b0 e0       	ldi	r27, 0x00	; 0
+  98:	eb e3       	ldi	r30, 0x3B	; 59
+  9a:	f0 e0       	ldi	r31, 0x00	; 0
+  9c:	80 81       	ld	r24, Z
+  9e:	8e 7f       	andi	r24, 0xFE	; 254
+  a0:	8c 93       	st	X, r24
+	PORTA &= ~(1<<1) ;
+  a2:	ab e3       	ldi	r26, 0x3B	; 59
+  a4:	b0 e0       	ldi	r27, 0x00	; 0
+  a6:	eb e3       	ldi	r30, 0x3B	; 59
+  a8:	f0 e0       	ldi	r31, 0x00	; 0
+  aa:	80 81       	ld	r24, Z
+  ac:	8d 7f       	andi	r24, 0xFD	; 253
+  ae:	8c 93       	st	X, r24
+	//set direction for button as input pin0,1,2
+	DDRB &= ~(1<<0) ;
+  b0:	a7 e3       	ldi	r26, 0x37	; 55
+  b2:	b0 e0       	ldi	r27, 0x00	; 0
+  b4:	e7 e3       	ldi	r30, 0x37	; 55
+  b6:	f0 e0       	ldi	r31, 0x00	; 0
+  b8:	80 81       	ld	r24, Z
+  ba:	8e 7f       	andi	r24, 0xFE	; 254
+  bc:	8c 93       	st	X, r24
+	DDRB &= ~(1<<1) ;
+  be:	a7 e3       	ldi	r26, 0x37	; 55
+  c0:	b0 e0       	ldi	r27, 0x00	; 0
+  c2:	e7 e3       	ldi	r30, 0x37	; 55
+  c4:	f0 e0       	ldi	r31, 0x00	; 0
+  c6:	80 81       	ld	r24, Z
+  c8:	8d 7f       	andi	r24, 0xFD	; 253
+  ca:	8c 93       	st	X, r24
+	DDRB &= ~(1<<2) ;
+  cc:	a7 e3       	ldi	r26, 0x37	; 55
+  ce:	b0 e0       	ldi	r27, 0x00	; 0
+  d0:	e7 e3       	ldi	r30, 0x37	; 55
+  d2:	f0 e0       	ldi	r31, 0x00	; 0
+  d4:	80 81       	ld	r24, Z
+  d6:	8b 7f       	andi	r24, 0xFB	; 251
+  d8:	8c 93       	st	X, r24
+	//activate pull-up mode for push button
+	PORTB |= (1<<0) ;
+  da:	a8 e3       	ldi	r26, 0x38	; 56
+  dc:	b0 e0       	ldi	r27, 0x00	; 0
+  de:	e8 e3       	ldi	r30, 0x38	; 56
+  e0:	f0 e0       	ldi	r31, 0x00	; 0
+  e2:	80 81       	ld	r24, Z
+  e4:	81 60       	ori	r24, 0x01	; 1
+  e6:	8c 93       	st	X, r24
+	PORTB |= (1<<1) ;
+  e8:	a8 e3       	ldi	r26, 0x38	; 56
+  ea:	b0 e0       	ldi	r27, 0x00	; 0
+  ec:	e8 e3       	ldi	r30, 0x38	; 56
+  ee:	f0 e0       	ldi	r31, 0x00	; 0
+  f0:	80 81       	ld	r24, Z
+  f2:	82 60       	ori	r24, 0x02	; 2
+  f4:	8c 93       	st	X, r24
+	PORTB |= (1<<2) ;
+  f6:	a8 e3       	ldi	r26, 0x38	; 56
+  f8:	b0 e0       	ldi	r27, 0x00	; 0
+  fa:	e8 e3       	ldi	r30, 0x38	; 56
+  fc:	f0 e0       	ldi	r31, 0x00	; 0
+  fe:	80 81       	ld	r24, Z
+ 100:	84 60       	ori	r24, 0x04	; 4
+ 102:	8c 93       	st	X, r24
+	while (1)
+	{
+		/*while (((PINB>>0)&1) ==0) ;
+		while (((PINB>>1)&1) ==0) ;
+		while (((PINB>>2)&1) ==0) ;*/
+		pinStatus1 = ((PINB>>0)&1) ;
+ 104:	e6 e3       	ldi	r30, 0x36	; 54
+ 106:	f0 e0       	ldi	r31, 0x00	; 0
+ 108:	80 81       	ld	r24, Z
+ 10a:	81 70       	andi	r24, 0x01	; 1
+ 10c:	8b 83       	std	Y+3, r24	; 0x03
+		pinStatus2 = ((PINB>>1)&1) ;
+ 10e:	e6 e3       	ldi	r30, 0x36	; 54
+ 110:	f0 e0       	ldi	r31, 0x00	; 0
+ 112:	80 81       	ld	r24, Z
+ 114:	86 95       	lsr	r24
+ 116:	81 70       	andi	r24, 0x01	; 1
+ 118:	8a 83       	std	Y+2, r24	; 0x02
+		pinStatus3 = ((PINB>>2)&1) ;
+ 11a:	e6 e3       	ldi	r30, 0x36	; 54
+ 11c:	f0 e0       	ldi	r31, 0x00	; 0
+ 11e:	80 81       	ld	r24, Z
+ 120:	86 95       	lsr	r24
+ 122:	86 95       	lsr	r24
+ 124:	81 70       	andi	r24, 0x01	; 1
+ 126:	89 83       	std	Y+1, r24	; 0x01
+		if (pinStatus1==0)
+ 128:	8b 81       	ldd	r24, Y+3	; 0x03
+ 12a:	88 23       	and	r24, r24
+ 12c:	39 f4       	brne	.+14     	; 0x13c <main+0xd0>
+		{
+			PORTA |= (1<<0) ; //turn on led1 only
+ 12e:	ab e3       	ldi	r26, 0x3B	; 59
+ 130:	b0 e0       	ldi	r27, 0x00	; 0
+ 132:	eb e3       	ldi	r30, 0x3B	; 59
+ 134:	f0 e0       	ldi	r31, 0x00	; 0
+ 136:	80 81       	ld	r24, Z
+ 138:	81 60       	ori	r24, 0x01	; 1
+ 13a:	8c 93       	st	X, r24
+		}
+		if (pinStatus2==0)
+ 13c:	8a 81       	ldd	r24, Y+2	; 0x02
+ 13e:	88 23       	and	r24, r24
+ 140:	39 f4       	brne	.+14     	; 0x150 <main+0xe4>
+		{
+			PORTA |= (1<<1) ; //turn on led2 only
+ 142:	ab e3       	ldi	r26, 0x3B	; 59
+ 144:	b0 e0       	ldi	r27, 0x00	; 0
+ 146:	eb e3       	ldi	r30, 0x3B	; 59
+ 148:	f0 e0       	ldi	r31, 0x00	; 0
+ 14a:	80 81       	ld	r24, Z
+ 14c:	82 60       	ori	r24, 0x02	; 2
+ 14e:	8c 93       	st	X, r24
+		}
+		if (pinStatus3==0)
+ 150:	89 81       	ldd	r24, Y+1	; 0x01
+ 152:	88 23       	and	r24, r24
+ 154:	71 f4       	brne	.+28     	; 0x172 <main+0x106>
+		{
+			PORTA |= (1<<0) ; //turn on led1
+ 156:	ab e3       	ldi	r26, 0x3B	; 59
+ 158:	b0 e0       	ldi	r27, 0x00	; 0
+ 15a:	eb e3       	ldi	r30, 0x3B	; 59
+ 15c:	f0 e0       	ldi	r31, 0x00	; 0
+ 15e:	80 81       	ld	r24, Z
+ 160:	81 60       	ori	r24, 0x01	; 1
+ 162:	8c 93       	st	X, r24
+			PORTA |= (1<<1) ; //turn on led2
+ 164:	ab e3       	ldi	r26, 0x3B	; 59
+ 166:	b0 e0       	ldi	r27, 0x00	; 0
+ 168:	eb e3       	ldi	r30, 0x3B	; 59
+ 16a:	f0 e0       	ldi	r31, 0x00	; 0
+ 16c:	80 81       	ld	r24, Z
+ 16e:	82 60       	ori	r24, 0x02	; 2
+ 170:	8c 93       	st	X, r24
+		}
+		if (pinStatus1==0 && pinStatus2==0 )
+ 172:	8b 81       	ldd	r24, Y+3	; 0x03
+ 174:	88 23       	and	r24, r24
+ 176:	91 f4       	brne	.+36     	; 0x19c <main+0x130>
+ 178:	8a 81       	ldd	r24, Y+2	; 0x02
+ 17a:	88 23       	and	r24, r24
+ 17c:	79 f4       	brne	.+30     	; 0x19c <main+0x130>
+		{
+			PORTA |= (1<<0) ; //turn on led1
+ 17e:	ab e3       	ldi	r26, 0x3B	; 59
+ 180:	b0 e0       	ldi	r27, 0x00	; 0
+ 182:	eb e3       	ldi	r30, 0x3B	; 59
+ 184:	f0 e0       	ldi	r31, 0x00	; 0
+ 186:	80 81       	ld	r24, Z
+ 188:	81 60       	ori	r24, 0x01	; 1
+ 18a:	8c 93       	st	X, r24
+			PORTA |= (1<<1) ; //turn on led2
+ 18c:	ab e3       	ldi	r26, 0x3B	; 59
+ 18e:	b0 e0       	ldi	r27, 0x00	; 0
+ 190:	eb e3       	ldi	r30, 0x3B	; 59
+ 192:	f0 e0       	ldi	r31, 0x00	; 0
+ 194:	80 81       	ld	r24, Z
+ 196:	82 60       	ori	r24, 0x02	; 2
+ 198:	8c 93       	st	X, r24
+ 19a:	b4 cf       	rjmp	.-152    	; 0x104 <main+0x98>
+		}
+		else
+		{
+			PORTA &= ~(1<<0) ;
+ 19c:	ab e3       	ldi	r26, 0x3B	; 59
+ 19e:	b0 e0       	ldi	r27, 0x00	; 0
+ 1a0:	eb e3       	ldi	r30, 0x3B	; 59
+ 1a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a4:	80 81       	ld	r24, Z
+ 1a6:	8e 7f       	andi	r24, 0xFE	; 254
+ 1a8:	8c 93       	st	X, r24
+			PORTA &= ~(1<<1) ;
+ 1aa:	ab e3       	ldi	r26, 0x3B	; 59
+ 1ac:	b0 e0       	ldi	r27, 0x00	; 0
+ 1ae:	eb e3       	ldi	r30, 0x3B	; 59
+ 1b0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b2:	80 81       	ld	r24, Z
+ 1b4:	8d 7f       	andi	r24, 0xFD	; 253
+ 1b6:	8c 93       	st	X, r24
+ 1b8:	a5 cf       	rjmp	.-182    	; 0x104 <main+0x98>
+
+000001ba <_exit>:
+ 1ba:	f8 94       	cli
+
+000001bc <__stop_program>:
+ 1bc:	ff cf       	rjmp	.-2      	; 0x1bc <__stop_program>

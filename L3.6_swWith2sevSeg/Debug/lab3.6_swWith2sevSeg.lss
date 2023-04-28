@@ -1,0 +1,271 @@
+
+lab3.6_swWith2sevSeg.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001ac  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000a  00800060  000001ac  00000220  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .stab         000004bc  00000000  00000000  0000022c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000945  00000000  00000000  000006e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   8:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  10:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  14:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  18:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  1c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  20:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  24:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  28:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  2c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  30:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  34:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  38:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  3c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  40:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  44:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  48:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  4c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  50:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	ec ea       	ldi	r30, 0xAC	; 172
+  68:	f1 e0       	ldi	r31, 0x01	; 1
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
+
+0000006c <.do_copy_data_loop>:
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+
+00000070 <.do_copy_data_start>:
+  70:	aa 36       	cpi	r26, 0x6A	; 106
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <.do_copy_data_loop>
+  76:	0e 94 41 00 	call	0x82	; 0x82 <main>
+  7a:	0c 94 d4 00 	jmp	0x1a8	; 0x1a8 <_exit>
+
+0000007e <__bad_interrupt>:
+  7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000082 <main>:
+#define PORTD    	*((u8*)0x32)
+#define DDRD    	*((u8*)0x31)
+#define PIND    	*((volatile u8*)0x30)
+
+int main(void)
+{
+  82:	df 93       	push	r29
+  84:	cf 93       	push	r28
+  86:	cd b7       	in	r28, 0x3d	; 61
+  88:	de b7       	in	r29, 0x3e	; 62
+  8a:	63 97       	sbiw	r28, 0x13	; 19
+  8c:	0f b6       	in	r0, 0x3f	; 63
+  8e:	f8 94       	cli
+  90:	de bf       	out	0x3e, r29	; 62
+  92:	0f be       	out	0x3f, r0	; 63
+  94:	cd bf       	out	0x3d, r28	; 61
+	//sevSeg with common cathode
+	u8 segCthd[] = {0x3F, 0x06, 0x5B,
+					0x4F, 0x66, 0x6D,
+					0x7D, 0x07, 0x7F,
+					0x6F};
+  96:	ce 01       	movw	r24, r28
+  98:	05 96       	adiw	r24, 0x05	; 5
+  9a:	98 8b       	std	Y+16, r25	; 0x10
+  9c:	8f 87       	std	Y+15, r24	; 0x0f
+  9e:	e0 e6       	ldi	r30, 0x60	; 96
+  a0:	f0 e0       	ldi	r31, 0x00	; 0
+  a2:	fa 8b       	std	Y+18, r31	; 0x12
+  a4:	e9 8b       	std	Y+17, r30	; 0x11
+  a6:	fa e0       	ldi	r31, 0x0A	; 10
+  a8:	fb 8b       	std	Y+19, r31	; 0x13
+  aa:	e9 89       	ldd	r30, Y+17	; 0x11
+  ac:	fa 89       	ldd	r31, Y+18	; 0x12
+  ae:	00 80       	ld	r0, Z
+  b0:	89 89       	ldd	r24, Y+17	; 0x11
+  b2:	9a 89       	ldd	r25, Y+18	; 0x12
+  b4:	01 96       	adiw	r24, 0x01	; 1
+  b6:	9a 8b       	std	Y+18, r25	; 0x12
+  b8:	89 8b       	std	Y+17, r24	; 0x11
+  ba:	ef 85       	ldd	r30, Y+15	; 0x0f
+  bc:	f8 89       	ldd	r31, Y+16	; 0x10
+  be:	00 82       	st	Z, r0
+  c0:	8f 85       	ldd	r24, Y+15	; 0x0f
+  c2:	98 89       	ldd	r25, Y+16	; 0x10
+  c4:	01 96       	adiw	r24, 0x01	; 1
+  c6:	98 8b       	std	Y+16, r25	; 0x10
+  c8:	8f 87       	std	Y+15, r24	; 0x0f
+  ca:	9b 89       	ldd	r25, Y+19	; 0x13
+  cc:	91 50       	subi	r25, 0x01	; 1
+  ce:	9b 8b       	std	Y+19, r25	; 0x13
+  d0:	eb 89       	ldd	r30, Y+19	; 0x13
+  d2:	ee 23       	and	r30, r30
+  d4:	51 f7       	brne	.-44     	; 0xaa <main+0x28>
+	u8 pinState,one,deci ;
+	u8 counter= 0;
+  d6:	19 82       	std	Y+1, r1	; 0x01
+
+	//output for PORTA
+	DDRA = 0xff ;
+  d8:	ea e3       	ldi	r30, 0x3A	; 58
+  da:	f0 e0       	ldi	r31, 0x00	; 0
+  dc:	8f ef       	ldi	r24, 0xFF	; 255
+  de:	80 83       	st	Z, r24
+	//normal mode is 0
+	PORTA= 0x3f ;
+  e0:	eb e3       	ldi	r30, 0x3B	; 59
+  e2:	f0 e0       	ldi	r31, 0x00	; 0
+  e4:	8f e3       	ldi	r24, 0x3F	; 63
+  e6:	80 83       	st	Z, r24
+	//output for PORTB
+	DDRB = 0xff ;
+  e8:	e7 e3       	ldi	r30, 0x37	; 55
+  ea:	f0 e0       	ldi	r31, 0x00	; 0
+  ec:	8f ef       	ldi	r24, 0xFF	; 255
+  ee:	80 83       	st	Z, r24
+	//normal mode is 0
+	PORTB= 0x3f ;
+  f0:	e8 e3       	ldi	r30, 0x38	; 56
+  f2:	f0 e0       	ldi	r31, 0x00	; 0
+  f4:	8f e3       	ldi	r24, 0x3F	; 63
+  f6:	80 83       	st	Z, r24
+	//set pin 0 in PORTD as input
+	DDRD &= ~(1<<0) ;
+  f8:	a1 e3       	ldi	r26, 0x31	; 49
+  fa:	b0 e0       	ldi	r27, 0x00	; 0
+  fc:	e1 e3       	ldi	r30, 0x31	; 49
+  fe:	f0 e0       	ldi	r31, 0x00	; 0
+ 100:	80 81       	ld	r24, Z
+ 102:	8e 7f       	andi	r24, 0xFE	; 254
+ 104:	8c 93       	st	X, r24
+	//activate internally pull up
+	PORTD |= (1<<0) ;
+ 106:	a2 e3       	ldi	r26, 0x32	; 50
+ 108:	b0 e0       	ldi	r27, 0x00	; 0
+ 10a:	e2 e3       	ldi	r30, 0x32	; 50
+ 10c:	f0 e0       	ldi	r31, 0x00	; 0
+ 10e:	80 81       	ld	r24, Z
+ 110:	81 60       	ori	r24, 0x01	; 1
+ 112:	8c 93       	st	X, r24
+	while(1)
+	{
+		pinState= ((PIND>>0) & 1) ; //read this pin 0
+ 114:	e0 e3       	ldi	r30, 0x30	; 48
+ 116:	f0 e0       	ldi	r31, 0x00	; 0
+ 118:	80 81       	ld	r24, Z
+ 11a:	81 70       	andi	r24, 0x01	; 1
+ 11c:	8c 83       	std	Y+4, r24	; 0x04
+		//for two seven seg from 0 to 99
+
+			if (pinState == 0)
+ 11e:	8c 81       	ldd	r24, Y+4	; 0x04
+ 120:	88 23       	and	r24, r24
+ 122:	61 f4       	brne	.+24     	; 0x13c <main+0xba>
+			{
+				counter++ ;
+ 124:	89 81       	ldd	r24, Y+1	; 0x01
+ 126:	8f 5f       	subi	r24, 0xFF	; 255
+ 128:	89 83       	std	Y+1, r24	; 0x01
+				while (((PIND>>0) & 1) == 0) ; //read pin for long push
+ 12a:	e0 e3       	ldi	r30, 0x30	; 48
+ 12c:	f0 e0       	ldi	r31, 0x00	; 0
+ 12e:	80 81       	ld	r24, Z
+ 130:	88 2f       	mov	r24, r24
+ 132:	90 e0       	ldi	r25, 0x00	; 0
+ 134:	81 70       	andi	r24, 0x01	; 1
+ 136:	90 70       	andi	r25, 0x00	; 0
+ 138:	00 97       	sbiw	r24, 0x00	; 0
+ 13a:	b9 f3       	breq	.-18     	; 0x12a <main+0xa8>
+			}
+			one = counter%10 ;
+ 13c:	89 81       	ldd	r24, Y+1	; 0x01
+ 13e:	9a e0       	ldi	r25, 0x0A	; 10
+ 140:	69 2f       	mov	r22, r25
+ 142:	0e 94 c8 00 	call	0x190	; 0x190 <__udivmodqi4>
+ 146:	89 2f       	mov	r24, r25
+ 148:	8b 83       	std	Y+3, r24	; 0x03
+			deci= counter/10 ;
+ 14a:	89 81       	ldd	r24, Y+1	; 0x01
+ 14c:	9a e0       	ldi	r25, 0x0A	; 10
+ 14e:	69 2f       	mov	r22, r25
+ 150:	0e 94 c8 00 	call	0x190	; 0x190 <__udivmodqi4>
+ 154:	8a 83       	std	Y+2, r24	; 0x02
+			PORTB = segCthd[one] ;
+ 156:	a8 e3       	ldi	r26, 0x38	; 56
+ 158:	b0 e0       	ldi	r27, 0x00	; 0
+ 15a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 15c:	28 2f       	mov	r18, r24
+ 15e:	30 e0       	ldi	r19, 0x00	; 0
+ 160:	ce 01       	movw	r24, r28
+ 162:	05 96       	adiw	r24, 0x05	; 5
+ 164:	fc 01       	movw	r30, r24
+ 166:	e2 0f       	add	r30, r18
+ 168:	f3 1f       	adc	r31, r19
+ 16a:	80 81       	ld	r24, Z
+ 16c:	8c 93       	st	X, r24
+			PORTA = segCthd[deci] ;
+ 16e:	ab e3       	ldi	r26, 0x3B	; 59
+ 170:	b0 e0       	ldi	r27, 0x00	; 0
+ 172:	8a 81       	ldd	r24, Y+2	; 0x02
+ 174:	28 2f       	mov	r18, r24
+ 176:	30 e0       	ldi	r19, 0x00	; 0
+ 178:	ce 01       	movw	r24, r28
+ 17a:	05 96       	adiw	r24, 0x05	; 5
+ 17c:	fc 01       	movw	r30, r24
+ 17e:	e2 0f       	add	r30, r18
+ 180:	f3 1f       	adc	r31, r19
+ 182:	80 81       	ld	r24, Z
+ 184:	8c 93       	st	X, r24
+
+			if (counter > 99)
+ 186:	89 81       	ldd	r24, Y+1	; 0x01
+ 188:	84 36       	cpi	r24, 0x64	; 100
+ 18a:	20 f2       	brcs	.-120    	; 0x114 <main+0x92>
+			{
+				counter=0;
+ 18c:	19 82       	std	Y+1, r1	; 0x01
+ 18e:	c2 cf       	rjmp	.-124    	; 0x114 <main+0x92>
+
+00000190 <__udivmodqi4>:
+ 190:	99 1b       	sub	r25, r25
+ 192:	79 e0       	ldi	r23, 0x09	; 9
+ 194:	04 c0       	rjmp	.+8      	; 0x19e <__udivmodqi4_ep>
+
+00000196 <__udivmodqi4_loop>:
+ 196:	99 1f       	adc	r25, r25
+ 198:	96 17       	cp	r25, r22
+ 19a:	08 f0       	brcs	.+2      	; 0x19e <__udivmodqi4_ep>
+ 19c:	96 1b       	sub	r25, r22
+
+0000019e <__udivmodqi4_ep>:
+ 19e:	88 1f       	adc	r24, r24
+ 1a0:	7a 95       	dec	r23
+ 1a2:	c9 f7       	brne	.-14     	; 0x196 <__udivmodqi4_loop>
+ 1a4:	80 95       	com	r24
+ 1a6:	08 95       	ret
+
+000001a8 <_exit>:
+ 1a8:	f8 94       	cli
+
+000001aa <__stop_program>:
+ 1aa:	ff cf       	rjmp	.-2      	; 0x1aa <__stop_program>
