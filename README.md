@@ -1,2 +1,2 @@
-# AVR-Projects
+# AVR-NTI
 
